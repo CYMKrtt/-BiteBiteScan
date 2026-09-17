@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BiteBite Scan</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- header + nav (อัญอัญ) ใช้ semantic tag ตามคำแนะนำของอาจารย์ -->
+<header id="site-header">
+	<h1>BiteBite Scan</h1>
+	<p class="subtext">งานวิชา 960141 Web Programming</p>
+</header>
+
+<nav id="main-nav">
+	<button type="button" id="tab-scan" class="tabbtn active" onclick="showPage('scan')">สแกนอาหาร</button>
+	<button type="button" id="tab-history" class="tabbtn" onclick="showPage('history')">ประวัติการสแกน</button>
+	<button type="button" id="tab-student" class="tabbtn" onclick="showPage('student')">ประวัติรายบุคคล</button>
+	<button type="button" id="tab-menu" class="tabbtn" onclick="showPage('menu')">เมนูโรงเรียน</button>
+	<button type="button" id="tab-stats" class="tabbtn" onclick="showPage('stats')">สถิติรวม</button>
+	<button type="button" id="tab-members" class="tabbtn" onclick="showPage('members')">รายละเอียดสมาชิก</button>
+</nav>
+
+<main id="content">
+
+	<!-- หน้า 1 สแกนอาหาร (อัญอัญ ทำหน้าเว็บ/กล้อง, โอม ต่อโมเดล AI) + เลือกโรงเรียน (มัช) -->
+	<section id="page-scan" class="page active">
+		<h2>สแกนอาหารในจาน</h2>
+
+		<p class="hint">กรอกชื่อก่อนนะ เดี๋ยวระบบจะเอาไปใส่ในตารางประวัติ</p>
+		<label for="scannerName">ชื่อคนสแกน</label>
+		<input type="text" id="scannerName" list="knownNames" placeholder="เช่น อัญอัญ">
+		<!-- ช่องนี้จะโชว์ชื่อที่เคยพิมพ์ไปแล้วให้เลือกซ้ำได้ กันพิมพ์ชื่อเดิมเพี้ยนไปมา -->
+		<datalist id="knownNames"></datalist>
+
+		<div id="school-box">
+			<p><b>เลือกโรงเรียนของคุณ</b></p>
+			<label><input type="radio" name="scanSchool" value="school1" onchange="onSchoolChange()"> โรงเรียน 1</label>
+			<label><input type="radio" name="scanSchool" value="school2" onchange="onSchoolChange()"> โรงเรียน 2</label>
+			<p id="todayMenuPreview" class="hint">เลือกโรงเรียนก่อน เดี๋ยวจะบอกว่าวันนี้เมนูอะไร</p>
+		</div>
+
+		<div id="preview-box" ondrop="dropImage(event)" ondragover="allowDrop(event)" onclick="document.getElementById('fileInput').click()">
+			ใส่รูปตรงนี้ (ลากมาวาง หรือกดเพื่อเลือกไฟล์)
+		</div>
+		<input type="file" id="fileInput" accept="image/*" onchange="selectImage(event)">
+
+		<p class="hint">หรือถ้าอยากถ่ายเลยตรงนี้ ก็กดเปิดกล้องได้</p>
+		<button type="button" class="btn" onclick="openCamera()">เปิดกล้อง</button>
+
+		<!-- ซ่อนไว้ก่อนเป็นค่าเริ่มต้น เมื่อกดเปิดกล้อง JavaScript จะเพิ่ม class show ให้ -->
+		<div id="camera-area">
+			<video id="cameraVideo" autoplay playsinline></video>
+			<br>
+			<button type="button" class="btn" onclick="capturePhoto()">ถ่ายรูป</button>
+			<button type="button" class="btn" onclick="closeCamera()">ปิดกล้อง</button>
+		</div>
+		<canvas id="workCanvas"></canvas>
+
+		<label for="manualMenuName">ชื่อเมนู (ไม่บังคับ)</label>
+		<input type="text" id="manualMenuName" list="knownMenus" placeholder="ถ้าพกข้าวมาเอง หรือกลัวระบบเดาผิด พิมพ์ตรงนี้">
+		<datalist id="knownMenus"></datalist>
+		<p class="hint">ถ้าเว้นว่างไว้ ระบบจะเดาชื่อเมนูจากรูปให้เอง</p>
+
+		<button type="button" id="scan-btn" class="btn" onclick="scanFood()">เริ่มสแกน</button>
+		<p id="scanStatus" class="hint"></p>
+
+		<article id="result-box">
+			<h3>ผลการสแกน</h3>
+			<table>
+				<tr><th>เมนู</th><td id="resMenu">-</td></tr>
+				<tr><th>เทียบกับเมนูวันนี้</th><td id="resMatch">-</td></tr>
+				<tr><th>พลังงานโดยประมาณ</th><td id="resKcal">-</td></tr>
+				<tr><th>กินเหลือ</th><td id="resLeft">-</td></tr>
+				<tr><th>พลังงานที่สูญเสียโดยประมาณ</th><td id="resWaste">-</td></tr>
+				<tr><th>สารอาหารที่ได้</th><td id="resNutri">-</td></tr>
+			</table>
+			<p class="hint">ตัวเลขพลังงานเป็นค่าประมาณต่อ 1 จาน/ถ้วย อ้างอิงจาก
+				<a href="https://hdmall.co.th/blog/table-of-calories-in-food-types/" target="_blank" rel="noopener">ตารางแคลอรี่อาหารไทย (HDmall)</a>
+				ของจริงอาจต่างกันตามร้านและปริมาณส่วนผสม</p>
+		</article>
+	</section>
+
+	<!-- หน้า 2 ประวัติการสแกน (ใบบุญ) -->
+	<section id="page-history" class="page">
+		<h2>ประวัติการสแกน</h2>
+		<p class="hint">ข้อมูลตรงนี้เก็บใน localStorage ปิดเว็บแล้วเปิดใหม่ก็ยังอยู่</p>
+
+		<table id="history-table">
+			<thead>
+				<tr><th>ลำดับ</th><th>ชื่อ</th><th>โรงเรียน</th><th>เมนู</th><th>กินเหลือ</th><th>สถานะ</th></tr>
+			</thead>
+			<tbody id="historyBody"></tbody>
+		</table>
+
+		<button type="button" class="btn" onclick="clearHistory()">ล้างประวัติทั้งหมด</button>
+	</section>
+
+	<!-- หน้าใหม่ ประวัติรายบุคคล (ใบบุญ) พิมพ์ชื่อคนที่เคยสแกนไปแล้ว แล้วกดปุ่มดูประวัติเฉพาะคนนั้น -->
+	<section id="page-student" class="page">
+		<h2>ประวัติรายบุคคล</h2>
+		<p class="hint">พิมพ์ชื่อที่เคยใช้ตอนสแกน (มีให้เลือกจากที่เคยพิมพ์ไปแล้ว) แล้วกดดูประวัติ</p>
+
+		<label for="studentNameInput">ชื่อนักเรียน</label>
+		<input type="text" id="studentNameInput" list="knownNames" placeholder="เช่น อัญอัญ">
+		<br>
+		<button type="button" class="btn" onclick="showStudentHistory()">ดูประวัติ</button>
+
+		<div id="student-summary-box">
+			<p><b>จำนวนครั้งที่สแกน:</b> <span id="stuTotal">-</span></p>
+			<p><b>ระดับกินเหลือที่พบบ่อยสุด:</b> <span id="stuMostLevel">-</span></p>
+			<p><b>พลังงานที่สูญเสียรวมโดยประมาณ:</b> <span id="stuWasteKcal">-</span></p>
+			<p><b>พลังงานที่กินได้จริง/ลด food waste ได้รวม:</b> <span id="stuSavedKcal">-</span></p>
+		</div>
+
+		<table id="student-history-table">
+			<thead>
+				<tr><th>ลำดับ</th><th>วันที่</th><th>โรงเรียน</th><th>เมนู</th><th>กินเหลือ</th><th>แคลที่สูญเสีย</th></tr>
+			</thead>
+			<tbody id="studentHistoryBody"><tr><td colspan="6">พิมพ์ชื่อแล้วกดดูประวัติก่อนนะ</td></tr></tbody>
+		</table>
+	</section>
+
+	<!-- หน้า 3 เมนูโรงเรียน (มัช) -->
+	<section id="page-menu" class="page">
+		<h2>เมนูอาหารประจำสัปดาห์</h2>
+		<p class="hint">แต่ละโรงเรียนเมนูไม่เหมือนกัน เลือกโรงเรียนก่อนแล้วค่อยพิมพ์เมนูของแต่ละวัน</p>
+
+		<div id="menu-school-tabs">
+			<button type="button" id="menuSchoolTab1" class="tabbtn small active" onclick="showMenuSchool('school1')">โรงเรียน 1</button>
+			<button type="button" id="menuSchoolTab2" class="tabbtn small" onclick="showMenuSchool('school2')">โรงเรียน 2</button>
+		</div>
+		<p id="menuSchoolLabel">กำลังแก้ไขเมนูของ: โรงเรียน 1</p>
+
+		<ul id="day-list">
+			<li class="day-box mon"><label for="menuMon">จันทร์</label><input type="text" id="menuMon"></li>
+			<li class="day-box tue"><label for="menuTue">อังคาร</label><input type="text" id="menuTue"></li>
+			<li class="day-box wed"><label for="menuWed">พุธ</label><input type="text" id="menuWed"></li>
+			<li class="day-box thu"><label for="menuThu">พฤหัส</label><input type="text" id="menuThu"></li>
+			<li class="day-box fri"><label for="menuFri">ศุกร์</label><input type="text" id="menuFri"></li>
+		</ul>
+
+		<button type="button" class="btn" onclick="saveMenu()">บันทึกเมนู</button>
+		<button type="button" class="btn" onclick="clearMenu()">ล้างเมนู</button>
+	</section>
+
+	<!-- หน้า 4 สถิติรวม (ใบบุญ) -->
+	<section id="page-stats" class="page">
+		<h2>สรุปสถิติรวม</h2>
+		<table id="stat-table">
+			<tr><th>จำนวนครั้งที่สแกนทั้งหมด</th><td id="statTotal">0</td></tr>
+			<tr><th>ระดับที่กินเหลือบ่อยที่สุด</th><td id="statAvg">-</td></tr>
+			<tr><th>จำนวนครั้งที่กินหมดจาน (ไม่เหลือเลย)</th><td id="statFull">0</td></tr>
+			<tr><th>จำนวนครั้งที่สแกนแล้วไม่ใช่อาหาร</th><td id="statError">0</td></tr>
+			<tr><th>พลังงานที่สูญเสียรวมโดยประมาณ</th><td id="statWasteKcal">0</td></tr>
+			<tr><th>พลังงานที่กินได้จริง/ลด food waste ได้รวม</th><td id="statSavedKcal">0</td></tr>
+		</table>
+	</section>
+
+	<!-- หน้า 5 รายละเอียดสมาชิก -->
+	<section id="page-members" class="page">
+		<h2>รายละเอียดสมาชิกกลุ่ม</h2>
+		<table id="members-table">
+			<thead>
+				<tr><th>ชื่อ-นามสกุล</th><th>รหัสนักศึกษา</th><th>ชื่อเล่น</th><th>ตำแหน่ง/หน้าที่รับผิดชอบ</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>ชัยมงคล รัตนบุรี</td><td>692110180</td><td>โอม</td><td>โมเดล AI จดจำอาหาร/อัปโหลดรูป/กล้อง</td></tr>
+				<tr><td>เหมรัศมิ์ พันธุ์ธนวิบูลย์</td><td>692110202</td><td>มัช</td><td>โรงเรียน/เมนู</td></tr>
+				<tr><td>จันทกานต์ เพิ่มบุญมา</td><td>692110179</td><td>ใบบุญ</td><td>ประวัติ/สถิติ</td></tr>
+				<tr><td>อัญชนา เขียวอ่อน</td><td>692110204</td><td>อัญอัญ</td><td>CSS/ตกแต่งหน้าเว็บ</td></tr>
+			</tbody>
+		</table>
+	</section>
+
+</main>
+
+<footer id="site-footer">
+	<p>ทำโดยกลุ่มเรา 4 คน: โอม (AI/โมเดลจดจำอาหาร/อัปโหลดรูป/กล้อง), มัช (โรงเรียน/เมนู), ใบบุญ (ประวัติ/สถิติ), อัญอัญ (CSS/ตกแต่งหน้าเว็บ)</p>
+</footer>
+
+<!-- 2 บรรทัดนี้ก๊อปมาจากหน้า export โมเดลของเว็บ Teachable Machine ตรงๆเลย อาจารย์อย่าหักคะแนนนะครับ -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>

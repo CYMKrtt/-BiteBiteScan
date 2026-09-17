@@ -1,0 +1,255 @@
+/* style.css - อัญอัญดูแลไฟล์นี้เป็นหลัก หากผู้อื่นแก้ไขกรุณาระบุชื่อไว้ในคอมเมนต์ด้วย */
+/* กฎที่มีข้อความสั้น (ไม่เกิน 4 บรรทัด) จะเขียนรวมไว้บรรทัดเดียว ส่วนกฎที่ยาวจะแยกบรรทัดตามปกติ */
+
+/* ----- พื้นฐานทั้งหน้า ----- */
+body {
+	margin: 0;
+	background-color: #f4f4f4;
+	font-family: "Kanit", "Tahoma", sans-serif;
+	color: #333;
+}
+
+p { color: #333; line-height: 1.5; }
+
+/* p.hint มีค่า specificity (element + class = 11) สูงกว่า p เฉยๆ (1) จึงได้สีเทาอ่อนกว่า */
+p.hint { color: #888; font-size: 14px; }
+
+h2, h3 { color: #2f5d9e; }
+h2 { text-align: center; margin-top: 0; }
+h3 { margin: 0 0 10px 0; }
+
+/* ----- header / footer (อัญอัญ) ----- */
+#site-header { background-color: #2f5d9e; color: white; text-align: center; padding: 20px 10px; }
+#site-header h1 { margin: 0; letter-spacing: 1px; }
+#site-header .subtext { color: #dbe6f5; font-size: 14px; margin: 5px 0 0 0; }
+
+#site-footer {
+	text-align: center;
+	font-size: 12px;
+	color: gray;
+	padding: 15px;
+	border-top: 1px solid #ddd;
+}
+
+/* ----- nav แท็บด้านบน (อัญอัญ) ----- */
+#main-nav { background-color: white; border-bottom: 2px solid #ccc; text-align: center; padding: 10px; }
+
+/* คุณสมบัติที่ปุ่มทุกแบบ (.tabbtn และ .btn) ใช้ร่วมกัน */
+button {
+	border: 1px solid #999;
+	color: #333;
+	font-family: inherit;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.tabbtn { background-color: #ddd; padding: 8px 18px; margin: 3px; border-radius: 6px 6px 0 0; }
+.tabbtn:hover { background-color: #ccc; }
+
+/* .tabbtn.active มี specificity สูงกว่า .tabbtn (2 class เทียบกับ 1 class) จึงไม่จำเป็นต้องใช้ !important */
+.tabbtn.active { background-color: #7fb3ff; border: 2px solid #2f5d9e; font-weight: bold; }
+
+/* แท็บเล็กในหน้าเมนูโรงเรียน */
+.tabbtn.small { font-size: 14px; padding: 5px 12px; border-radius: 6px; }
+
+/* ----- main กล่องเนื้อหาหลัก ----- */
+#content {
+	max-width: 720px;
+	margin: 20px auto;
+	padding: 20px;
+	background-color: white;
+	border: 1px solid #ccc;
+	box-shadow: 2px 2px 8px #ccc;
+	box-sizing: border-box;
+}
+
+/* องค์ประกอบที่ซ่อนไว้เป็นค่าเริ่มต้น โดย JavaScript จะเพิ่ม class active/show เพื่อแสดงผล */
+.page, #camera-area, #result-box, #fileInput, #workCanvas { display: none; }
+.page.active, #camera-area.show, #result-box.show { display: block; }
+.page { text-align: center; }
+
+/* ----- input ทั่วไป ----- */
+label { display: block; margin-top: 10px; font-weight: bold; }
+
+input[type="text"] {
+	border: 1px solid #999;
+	padding: 6px;
+	font-size: 15px;
+	font-family: inherit;
+	width: 260px;
+	max-width: 100%;
+	text-align: center;
+	border-radius: 4px;
+}
+
+/* ----- fieldset เลือกโรงเรียน (มัช) ----- */
+#school-box {
+	border: 1px solid #b8d4ff;
+	background-color: #f5f9ff;
+	border-radius: 6px;
+	margin: 15px auto;
+	max-width: 400px;
+	padding: 10px;
+}
+
+#school-box p { margin: 5px 0; }
+#school-box label { display: inline-block; margin: 5px 10px; font-weight: normal; }
+
+/* ----- กล่องใส่รูป + กล้อง (อัญอัญ) ----- */
+#preview-box {
+	width: 300px;
+	height: 200px;
+	max-width: 100%;
+	background-color: #eee;
+	border: 2px dashed #999;
+	margin: 15px auto;
+	line-height: 200px;
+	font-size: 16px;
+	color: gray;
+	overflow: hidden;
+	cursor: pointer;
+	border-radius: 8px;
+}
+
+#preview-box:hover { border-color: #2f5d9e; background-color: #e6f0ff; }
+#preview-box img { vertical-align: middle; max-width: 290px; max-height: 190px; }
+
+#camera-area { margin-top: 10px; }
+
+#cameraVideo {
+	width: 300px;
+	max-width: 100%;
+	height: 220px;
+	background-color: black;
+	border-radius: 8px;
+	object-fit: cover;
+}
+
+/* ----- ปุ่มทั่วไป ----- */
+.btn { background-color: #ffe066; padding: 10px 22px; margin: 10px 4px; border-radius: 5px; }
+.btn:hover { background-color: #ffc933; }
+
+/* ปุ่มสแกนใช้ #id (specificity 100) ซึ่งสูงกว่า .btn (specificity 10) ตามหลัก specificity ในบทที่ 5 จึงกำหนดเป็นสีเขียวได้โดยไม่ต้องใช้ !important */
+#scan-btn { background-color: #4caf50; color: white; font-weight: bold; padding: 12px 40px; }
+#scan-btn:hover { background-color: #3d8b40; }
+
+/* ----- สปินเนอร์ตอนกำลังสแกน (อัญอัญ) ----- */
+.spinner {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	margin-right: 6px;
+	vertical-align: middle;
+	border: 2px solid #cfd8e6;
+	border-top-color: #2f5d9e;
+	border-radius: 50%;
+	animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ปุ่มลิงก์เล็กๆ ให้แก้เมนูเองตอน AI ทายผิด */
+.link-btn {
+	background: none;
+	border: none;
+	padding: 0;
+	margin-left: 6px;
+	color: #2f5d9e;
+	font-size: 13px;
+	text-decoration: underline;
+	cursor: pointer;
+}
+.link-btn:hover { color: #1c3d6e; }
+
+/* ----- กล่องผลลัพธ์ (อัญอัญ) ----- */
+#result-box {
+	background-color: #fffbe0;
+	border: 1px solid #e0d060;
+	max-width: 420px;
+	margin: 15px auto;
+	padding: 12px;
+	border-radius: 6px;
+	text-align: left;
+}
+
+#result-box table { width: 100%; }
+#result-box th, #result-box td { padding: 6px; }
+#result-box th { text-align: left; width: 40%; vertical-align: top; }
+
+/* ข้อความสถานะต่างๆ */
+.status-ok, .status-warn, .status-error { font-weight: bold; }
+.status-ok { color: green; }
+.status-warn { color: darkorange; }
+.status-error { color: red; }
+
+/* ----- ตารางประวัติ (ใบบุญ) ----- */
+#history-table { border-collapse: collapse; width: 100%; margin: 10px auto; }
+#history-table th, #history-table td { border: 1px solid #999; padding: 8px; text-align: center; }
+#history-table th { background-color: #2f5d9e; color: white; }
+#history-table tbody tr:nth-child(even) { background-color: #f2f2f2; }
+
+/* ----- รายการวัน (มัช) ----- */
+#day-list {
+	list-style: none;
+	padding: 0;
+	margin: 15px auto;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.day-box {
+	border: 1px solid #999;
+	width: 120px;
+	padding: 10px;
+	margin: 5px;
+	border-radius: 6px;
+}
+
+.day-box label { margin-top: 0; }
+.day-box input[type="text"] { width: 100px; margin-top: 5px; }
+
+/* กำหนดสีของแต่ละวัน โดยใช้ 2 class ร่วมกัน (.day-box.mon) เพื่อให้มี specificity สูงกว่า .day-box เพียงอย่างเดียว */
+.day-box.mon { background-color: #ffe0e0; }
+.day-box.tue { background-color: #fff6cc; }
+.day-box.wed { background-color: #d6ffd6; }
+.day-box.thu { background-color: #ffe6c2; }
+.day-box.fri { background-color: #d6ecff; }
+
+/* ----- หน้าประวัติรายบุคคล (ใบบุญ) ----- */
+#student-summary-box {
+	border: 1px solid #b8d4ff;
+	background-color: #f5f9ff;
+	border-radius: 6px;
+	margin: 15px auto;
+	max-width: 420px;
+	padding: 10px;
+	text-align: left;
+}
+
+#student-summary-box p { margin: 5px 0; }
+
+#student-history-table { border-collapse: collapse; width: 100%; margin: 10px auto; }
+#student-history-table th, #student-history-table td { border: 1px solid #999; padding: 8px; text-align: center; }
+#student-history-table th { background-color: #2f5d9e; color: white; }
+#student-history-table tbody tr:nth-child(even) { background-color: #f2f2f2; }
+
+/* ----- ตารางสถิติ (ใบบุญ) ----- */
+#stat-table {
+	border: 2px solid #2f5d9e;
+	border-radius: 6px;
+	margin: 10px auto;
+	padding: 10px;
+	width: 100%;
+	max-width: 420px;
+}
+
+#stat-table th, #stat-table td { padding: 8px; }
+#stat-table th { text-align: left; font-weight: normal; }
+#stat-table td { text-align: right; font-weight: bold; color: #2f5d9e; }
+
+/* ----- ปรับการแสดงผลสำหรับหน้าจอขนาดเล็ก (มือถือ) ----- */
+@media (max-width: 500px) {
+	.tabbtn { font-size: 14px; padding: 6px 10px; }
+	#content { margin: 10px; padding: 12px; }
+}
