@@ -1,137 +1,184 @@
 /* style.css - อัญอัญดูแลไฟล์นี้เป็นหลัก หากผู้อื่นแก้ไขกรุณาระบุชื่อไว้ในคอมเมนต์ด้วย */
+/* ธีมของเว็บคือ "ถาดหลุมสแตนเลส" แบบที่ใช้ในโรงอาหารโรงเรียน: กล่องใหญ่ = ถาด, กล่องย่อย = หลุม (ยุบลงไปด้วย inset shadow) */
 /* กฎที่มีข้อความสั้น (ไม่เกิน 4 บรรทัด) จะเขียนรวมไว้บรรทัดเดียว ส่วนกฎที่ยาวจะแยกบรรทัดตามปกติ */
+
+/* ----- สีกับฟอนต์ เก็บเป็นตัวแปรไว้ที่เดียว ----- */
+:root {
+	--blue: #2f5d9e;       /* น้ำเงินกระเบื้องโรงอาหาร */
+	--blue-dark: #234a80;
+	--yolk: #ffc53d;       /* ไข่แดง ใช้กับปุ่มสแกนปุ่มเดียว */
+	--yolk-dark: #d9a21e;
+	--steel: #dfe4ea;      /* ถาดสแตนเลส */
+	--well: #eef1f5;       /* พื้นในหลุม */
+	--well-shadow: #b9c2cd;
+	--bg: #eef2f6;
+	--ink: #1d2a3a;
+	--gray: #5d6878;
+	--line: #cfd6de;
+	--ok: #3a9a5b;
+	--warn: #e8830c;
+	--error: #d9452b;
+	--head-font: "Mali", "Tahoma", sans-serif;
+	--body-font: "IBM Plex Sans Thai Looped", "Tahoma", sans-serif;
+}
 
 /* ----- พื้นฐานทั้งหน้า ----- */
 body {
 	margin: 0;
-	background-color: #f4f4f4;
-	font-family: "Kanit", "Tahoma", sans-serif;
-	color: #333;
-}
-
-p { color: #333; line-height: 1.5; }
-
-/* p.hint มีค่า specificity (element + class = 11) สูงกว่า p เฉยๆ (1) จึงได้สีเทาอ่อนกว่า */
-p.hint { color: #888; font-size: 14px; }
-
-h2, h3 { color: #2f5d9e; }
-h2 { text-align: center; margin-top: 0; }
-h3 { margin: 0 0 10px 0; }
-
-/* ----- header / footer (อัญอัญ) ----- */
-#site-header { background-color: #2f5d9e; color: white; text-align: center; padding: 20px 10px; }
-#site-header h1 { margin: 0; letter-spacing: 1px; }
-#site-header .subtext { color: #dbe6f5; font-size: 14px; margin: 5px 0 0 0; }
-
-#site-footer {
-	text-align: center;
-	font-size: 12px;
-	color: gray;
-	padding: 15px;
-	border-top: 1px solid #ddd;
-}
-
-/* ----- nav แท็บด้านบน (อัญอัญ) ----- */
-#main-nav { background-color: white; border-bottom: 2px solid #ccc; text-align: center; padding: 10px; }
-
-/* คุณสมบัติที่ปุ่มทุกแบบ (.tabbtn และ .btn) ใช้ร่วมกัน */
-button {
-	border: 1px solid #999;
-	color: #333;
-	font-family: inherit;
+	background-color: var(--bg);
+	font-family: var(--body-font);
 	font-size: 16px;
-	cursor: pointer;
+	line-height: 1.6;
+	color: var(--ink);
 }
 
-.tabbtn { background-color: #ddd; padding: 8px 18px; margin: 3px; border-radius: 6px 6px 0 0; }
-.tabbtn:hover { background-color: #ccc; }
+p { margin: 0 0 6px 0; }
+
+/* p.hint มีค่า specificity (element + class = 11) สูงกว่า p เฉยๆ (1) จึงได้สีเทากับตัวเล็กกว่า */
+p.hint { color: var(--gray); font-size: 14px; }
+
+h1, h2, h3 { font-family: var(--head-font); color: var(--blue); line-height: 1.3; }
+h2 { font-size: 24px; margin: 0 0 6px 0; }
+h3 { font-size: 18px; margin: 24px 0 10px 0; }
+
+a { color: var(--blue); }
+
+/* เห็นกรอบชัดๆ เวลาใช้คีย์บอร์ดกด Tab */
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+
+/* ซ่อนข้อความไว้ให้โปรแกรมอ่านหน้าจออ่าน แต่ไม่โชว์บนจอ */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ----- header (อัญอัญ) ----- */
+#site-header { background-color: var(--blue); color: white; padding: 18px 16px; }
+.header-inner { max-width: 820px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+#site-header h1 { color: white; font-size: 32px; margin: 0; }
+#site-header .subtext { color: #d5e1f2; margin: 0; }
+
+/* ป้ายเมนูวันนี้มุมขวาบน (มัช) */
+.today-chip { background-color: var(--yolk); color: var(--ink); padding: 6px 16px; border-radius: 999px; margin: 0; font-size: 15px; }
+
+/* ----- nav แท็บ (อัญอัญ) เป็นตัวหนังสือมีเส้นใต้ จอเล็กปัดซ้ายขวาได้ ----- */
+#main-nav {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	background-color: var(--bg);
+	border-bottom: 1px solid var(--line);
+	white-space: nowrap;
+	overflow-x: auto;
+	scrollbar-width: none; /* ซ่อนแถบเลื่อน ยังปัดนิ้วเลื่อนได้เหมือนเดิม */
+	text-align: center;
+}
+
+/* คุณสมบัติที่ปุ่มทุกแบบใช้ร่วมกัน */
+button { font-family: inherit; font-size: 16px; cursor: pointer; color: var(--ink); }
+button:disabled { cursor: not-allowed; }
+
+.tabbtn { background: none; border: none; border-bottom: 3px solid transparent; padding: 12px 14px 9px 14px; color: var(--gray); }
+.tabbtn:hover { color: var(--blue); }
 
 /* .tabbtn.active มี specificity สูงกว่า .tabbtn (2 class เทียบกับ 1 class) จึงไม่จำเป็นต้องใช้ !important */
-.tabbtn.active { background-color: #7fb3ff; border: 2px solid #2f5d9e; font-weight: bold; }
+.tabbtn.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
 
-/* แท็บเล็กในหน้าเมนูโรงเรียน */
-.tabbtn.small { font-size: 14px; padding: 5px 12px; border-radius: 6px; }
+/* แท็บเลือกโรงเรียนในหน้าเมนู ใช้หน้าตาแบบเดียวกับปุ่มเลือกโรงเรียนตอนสแกน */
+.tabbtn.small { border: 2px solid var(--line); border-radius: 999px; padding: 6px 18px; margin: 0 4px 0 0; }
+.tabbtn.small.active { background-color: var(--blue); border-color: var(--blue); color: white; }
 
 /* ----- main กล่องเนื้อหาหลัก ----- */
-#content {
-	max-width: 720px;
-	margin: 20px auto;
-	padding: 20px;
-	background-color: white;
-	border: 1px solid #ccc;
-	box-shadow: 2px 2px 8px #ccc;
-	box-sizing: border-box;
-}
+#content { max-width: 820px; margin: 24px auto; padding: 0 16px; box-sizing: border-box; }
 
 /* องค์ประกอบที่ซ่อนไว้เป็นค่าเริ่มต้น โดย JavaScript จะเพิ่ม class active/show เพื่อแสดงผล */
 .page, #camera-area, #result-box, #fileInput, #workCanvas { display: none; }
 .page.active, #camera-area.show, #result-box.show { display: block; }
-.page { text-align: center; }
+
+/* ----- ถาดกับหลุม (อัญอัญ) หัวใจของหน้าตาเว็บนี้ ----- */
+.tray {
+	background-color: var(--steel);
+	border: 1px solid var(--line);
+	border-radius: 28px;
+	box-shadow: inset 0 2px 0 white, 0 2px 0 var(--line);
+	padding: 16px;
+	margin-bottom: 20px;
+}
+
+.well {
+	background-color: var(--well);
+	border-radius: 18px;
+	box-shadow: inset 0 3px 6px var(--well-shadow), inset 0 -2px 0 white;
+	padding: 14px 16px;
+}
+
+.tray-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 14px; }
+.well-stack { display: grid; gap: 14px; }
+.well-wide { margin-bottom: 14px; }
+.well-actions { margin-top: 10px; }
 
 /* ----- input ทั่วไป ----- */
-label { display: block; margin-top: 10px; font-weight: bold; }
+label, .field-title { display: block; font-weight: 600; margin: 0 0 6px 0; }
 
 input[type="text"] {
-	border: 1px solid #999;
-	padding: 6px;
-	font-size: 15px;
+	border: 2px solid var(--line);
+	background-color: white;
+	padding: 9px 12px;
+	font-size: 16px;
 	font-family: inherit;
-	width: 260px;
-	max-width: 100%;
-	text-align: center;
-	border-radius: 4px;
+	width: 100%;
+	box-sizing: border-box;
+	border-radius: 10px;
 }
+input[type="text"]:focus { border-color: var(--blue); }
 
-/* ----- fieldset เลือกโรงเรียน (มัช) ----- */
-#school-box {
-	border: 1px solid #b8d4ff;
-	background-color: #f5f9ff;
-	border-radius: 6px;
-	margin: 15px auto;
-	max-width: 400px;
-	padding: 10px;
-}
-
-#school-box p { margin: 5px 0; }
-#school-box label { display: inline-block; margin: 5px 10px; font-weight: normal; }
+/* ----- เลือกโรงเรียน (มัช) ซ่อน radio จริงไว้ แล้วทำ span ข้างๆ ให้ดูเป็นปุ่ม ----- */
+.school-pick label { display: inline-block; margin: 0 4px 4px 0; font-weight: normal; }
+.school-pick input { position: absolute; opacity: 0; }
+.school-pick span { display: inline-block; padding: 6px 18px; border: 2px solid var(--line); background-color: white; border-radius: 999px; cursor: pointer; }
+.school-pick input:checked + span { background-color: var(--blue); border-color: var(--blue); color: white; font-weight: 600; }
+.school-pick input:focus-visible + span { outline: 3px solid var(--blue); outline-offset: 2px; }
 
 /* ----- กล่องใส่รูป + กล้อง (อัญอัญ) ----- */
 #preview-box {
-	width: 300px;
-	height: 200px;
-	max-width: 100%;
-	background-color: #eee;
-	border: 2px dashed #999;
-	margin: 15px auto;
-	line-height: 200px;
-	font-size: 16px;
-	color: gray;
-	overflow: hidden;
+	height: 260px;
+	border: 2px dashed #a9b4c2;
+	border-radius: 14px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	color: var(--gray);
 	cursor: pointer;
-	border-radius: 8px;
+	overflow: hidden;
 }
-
-#preview-box:hover { border-color: #2f5d9e; background-color: #e6f0ff; }
-#preview-box img { vertical-align: middle; max-width: 290px; max-height: 190px; }
+#preview-box:hover { border-color: var(--blue); color: var(--blue); }
+#preview-box.has-image { border: none; background-color: var(--ink); }
+#preview-box img { width: 100%; height: 100%; object-fit: contain; }
 
 #camera-area { margin-top: 10px; }
+#cameraVideo { width: 100%; height: 260px; background-color: black; border-radius: 14px; object-fit: cover; display: block; margin-bottom: 6px; }
 
-#cameraVideo {
-	width: 300px;
-	max-width: 100%;
-	height: 220px;
-	background-color: black;
-	border-radius: 8px;
-	object-fit: cover;
+/* ----- ปุ่มทั่วไป: ขอบน้ำเงิน, แบบทึบ, แบบอันตราย ----- */
+.btn { background-color: white; border: 2px solid var(--blue); color: var(--blue); padding: 7px 18px; margin: 4px 4px 4px 0; border-radius: 999px; font-weight: 600; }
+.btn:hover { background-color: #e3ebf7; }
+.btn-solid { background-color: var(--blue); color: white; }
+.btn-solid:hover { background-color: var(--blue-dark); }
+.btn-danger { border-color: var(--error); color: var(--error); margin-top: 16px; }
+.btn-danger:hover { background-color: #fbe6e2; }
+
+/* ปุ่มสแกนใช้ #id (specificity 100) ปุ่มเดียวในเว็บที่เป็นสีไข่แดง ให้เห็นชัดว่าต้องกดอันนี้ */
+.scan-row { text-align: center; padding-top: 16px; }
+#scan-btn {
+	background-color: var(--yolk);
+	border: none;
+	border-radius: 999px;
+	box-shadow: 0 4px 0 var(--yolk-dark);
+	font-family: var(--head-font);
+	font-size: 22px;
+	padding: 12px 56px;
+	margin-bottom: 8px;
 }
-
-/* ----- ปุ่มทั่วไป ----- */
-.btn { background-color: #ffe066; padding: 10px 22px; margin: 10px 4px; border-radius: 5px; }
-.btn:hover { background-color: #ffc933; }
-
-/* ปุ่มสแกนใช้ #id (specificity 100) ซึ่งสูงกว่า .btn (specificity 10) ตามหลัก specificity ในบทที่ 5 จึงกำหนดเป็นสีเขียวได้โดยไม่ต้องใช้ !important */
-#scan-btn { background-color: #4caf50; color: white; font-weight: bold; padding: 12px 40px; }
-#scan-btn:hover { background-color: #3d8b40; }
+#scan-btn:hover { background-color: #ffd266; }
+#scan-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--yolk-dark); }
+#scan-btn:disabled { background-color: var(--well); color: var(--gray); box-shadow: inset 0 2px 4px var(--well-shadow); transform: none; }
 
 /* ----- สปินเนอร์ตอนกำลังสแกน (อัญอัญ) ----- */
 .spinner {
@@ -140,8 +187,8 @@ input[type="text"] {
 	height: 14px;
 	margin-right: 6px;
 	vertical-align: middle;
-	border: 2px solid #cfd8e6;
-	border-top-color: #2f5d9e;
+	border: 2px solid var(--line);
+	border-top-color: var(--blue);
 	border-radius: 50%;
 	animation: spin 0.8s linear infinite;
 }
@@ -149,107 +196,131 @@ input[type="text"] {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ปุ่มลิงก์เล็กๆ ให้แก้เมนูเองตอน AI ทายผิด */
-.link-btn {
-	background: none;
-	border: none;
-	padding: 0;
-	margin-left: 6px;
-	color: #2f5d9e;
-	font-size: 13px;
-	text-decoration: underline;
-	cursor: pointer;
-}
-.link-btn:hover { color: #1c3d6e; }
+.link-btn { background: none; border: none; padding: 0; margin-top: 6px; color: var(--blue); font-size: 14px; text-decoration: underline; }
 
-/* ----- กล่องผลลัพธ์ (อัญอัญ) ----- */
-#result-box {
-	background-color: #fffbe0;
-	border: 1px solid #e0d060;
-	max-width: 420px;
-	margin: 15px auto;
-	padding: 12px;
-	border-radius: 6px;
-	text-align: left;
-}
+/* ----- ถาดผลลัพธ์ (อัญอัญ) ----- */
+#resMenu { font-size: 32px; margin-bottom: 8px; }
+.result-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 14px; }
+.well-name { font-size: 14px; color: var(--gray); margin-bottom: 4px; }
+.result-grid p + p { font-weight: 600; }
+.source { margin: 0 4px; }
 
-#result-box table { width: 100%; }
-#result-box th, #result-box td { padding: 6px; }
-#result-box th { text-align: left; width: 40%; vertical-align: top; }
+/* ตอนผลออก ข้อมูลจะ "ตักลงหลุม" ทีละหลุม เป็นอนิเมชันจุดเดียวของเว็บ */
+#result-box.show .well { animation: scoop 0.35s ease-out both; }
+#result-box.show .result-grid .well:nth-child(1) { animation-delay: 0.08s; }
+#result-box.show .result-grid .well:nth-child(2) { animation-delay: 0.16s; }
+#result-box.show .result-grid .well:nth-child(3) { animation-delay: 0.24s; }
+#result-box.show .result-grid .well:nth-child(4) { animation-delay: 0.32s; }
+#result-box.show .well-wide:last-of-type { animation-delay: 0.4s; }
+
+@keyframes scoop { from { opacity: 0; transform: translateY(-10px) scale(0.97); } to { opacity: 1; transform: none; } }
+
+/* แถบความมั่นใจของ AI กว้างตามเปอร์เซ็นต์ (ตั้ง width ใน JavaScript) */
+.conf-track { background-color: white; border-radius: 999px; height: 10px; overflow: hidden; max-width: 360px; }
+#resConfBar { background-color: var(--blue); height: 100%; width: 0; }
+
+/* ปุ่มตัวเลือกเมนูตอน AI ไม่ชัวร์ */
+#resChoices p { margin: 10px 0 6px 0; font-weight: 600; color: var(--warn); }
+.chip { background-color: white; border: 2px solid var(--blue); color: var(--blue); padding: 5px 14px; margin: 0 6px 6px 0; border-radius: 999px; }
+.chip:hover { background-color: var(--blue); color: white; }
 
 /* ข้อความสถานะต่างๆ */
-.status-ok, .status-warn, .status-error { font-weight: bold; }
-.status-ok { color: green; }
-.status-warn { color: darkorange; }
-.status-error { color: red; }
+.status-ok, .status-warn, .status-error { font-weight: 600; }
+.status-ok { color: var(--ok); }
+.status-warn { color: var(--warn); }
+.status-error { color: var(--error); }
 
-/* ----- ตารางประวัติ (ใบบุญ) ----- */
-#history-table { border-collapse: collapse; width: 100%; margin: 10px auto; }
-#history-table th, #history-table td { border: 1px solid #999; padding: 8px; text-align: center; }
-#history-table th { background-color: #2f5d9e; color: white; }
-#history-table tbody tr:nth-child(even) { background-color: #f2f2f2; }
+/* ป้ายสีมนๆ ใช้ในตารางและผลลัพธ์ ใช้ 2 class ร่วมกัน (.pill.status-ok) ให้ได้พื้นสีอ่อนตามสถานะ */
+.pill { display: inline-block; padding: 1px 10px; border-radius: 999px; font-size: 14px; background-color: var(--well); color: var(--gray); white-space: nowrap; }
+.pill.status-ok { background-color: #e1f2e6; color: #2b7a45; }
+.pill.status-warn { background-color: #fdebd5; color: #a85b05; }
+.pill.status-error { background-color: #fbe2dd; color: #b23620; }
+.pill.status-mid { background-color: #fff3cf; color: #8a6400; }
 
-/* ----- รายการวัน (มัช) ----- */
+/* ----- ตาราง (ใบบุญ) ใช้ class เดียวกันทุกตาราง ห่อด้วย .table-wrap ให้มือถือเลื่อนซ้ายขวาได้ ----- */
+.table-wrap { overflow-x: auto; margin: 14px 0; background-color: white; border-radius: 18px; border: 1px solid var(--line); }
+.data-table { border-collapse: collapse; width: 100%; font-size: 15px; }
+.data-table th, .data-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.data-table th { color: var(--gray); font-weight: 600; white-space: nowrap; background-color: var(--well); }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table td.empty { color: var(--gray); text-align: center; padding: 28px; }
+
+/* ----- หน้าประวัติรายบุคคล (ใบบุญ) ช่องพิมพ์ชื่อกับปุ่มอยู่แถวเดียวกัน ----- */
+.search-row { display: flex; gap: 8px; max-width: 480px; margin-top: 12px; }
+.search-row .btn { margin: 0; white-space: nowrap; }
+
+/* ----- รายการวัน (มัช) แต่ละวันเป็นหลุมหนึ่งหลุม ----- */
+#menu-school-tabs { margin-top: 14px; }
 #day-list {
 	list-style: none;
 	padding: 0;
-	margin: 15px auto;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
+	margin: 16px 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 12px;
+}
+.day-box { background-color: var(--well); border-radius: 18px; box-shadow: inset 0 3px 6px var(--well-shadow); padding: 12px; }
+.day-box input[type="text"] { font-size: 15px; padding: 7px 10px; }
+
+/* ----- การ์ดตัวเลข หน้ารายบุคคลกับหน้าสถิติ (ใบบุญ) ทำเป็นหลุมเล็กๆ เหมือนกัน ----- */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+.stat-card { background-color: var(--well); border-radius: 18px; box-shadow: inset 0 3px 6px var(--well-shadow); padding: 12px 14px; }
+.stat-card p { margin: 0; font-size: 14px; color: var(--gray); }
+.stat-card b { font-family: var(--head-font); font-size: 22px; color: var(--ink); }
+
+/* ----- กราฟแท่งระดับกินเหลือ (ใบบุญ) แท่งคือหลุมยาวที่ถูกเติมตามสัดส่วน ----- */
+.bar-row { display: grid; grid-template-columns: 150px 1fr 90px; align-items: center; gap: 10px; margin: 10px 0; }
+.bar-name { font-size: 15px; }
+.bar-track { background-color: var(--well); box-shadow: inset 0 2px 4px var(--well-shadow); border-radius: 999px; height: 22px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 999px; }
+.bar-num { text-align: right; font-size: 14px; color: var(--gray); }
+
+/* สีแท่ง จากเหลือเยอะ (พริกแดง) ไปจนกินหมด (ผักเขียว) */
+.bar-0 { background-color: var(--error); }
+.bar-1 { background-color: var(--warn); }
+.bar-2 { background-color: var(--yolk); }
+.bar-3 { background-color: var(--ok); }
+
+/* ----- กล่องข้อความแจ้งเตือนลอยๆ (อัญอัญ) ----- */
+#toast {
+	position: fixed;
+	left: 50%;
+	bottom: 24px;
+	transform: translate(-50%, 100px);
+	background-color: var(--ink);
+	color: white;
+	padding: 10px 22px;
+	border-radius: 999px;
+	opacity: 0;
+	transition: opacity 0.25s, transform 0.25s;
+	max-width: 90%;
+	text-align: center;
+	z-index: 20;
+}
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+#site-footer { max-width: 820px; margin: 0 auto; padding: 8px 16px 32px 16px; font-size: 13px; color: var(--gray); }
+#site-footer p { margin: 0; }
+
+/* ----- ปรับการแสดงผลสำหรับหน้าจอขนาดเล็ก (มือถือ) หลุมเรียงลงมาทีละอัน ----- */
+@media (max-width: 680px) {
+	.tray-grid { grid-template-columns: 1fr; }
+	.result-grid { grid-template-columns: 1fr 1fr; }
 }
 
-.day-box {
-	border: 1px solid #999;
-	width: 120px;
-	padding: 10px;
-	margin: 5px;
-	border-radius: 6px;
-}
-
-.day-box label { margin-top: 0; }
-.day-box input[type="text"] { width: 100px; margin-top: 5px; }
-
-/* กำหนดสีของแต่ละวัน โดยใช้ 2 class ร่วมกัน (.day-box.mon) เพื่อให้มี specificity สูงกว่า .day-box เพียงอย่างเดียว */
-.day-box.mon { background-color: #ffe0e0; }
-.day-box.tue { background-color: #fff6cc; }
-.day-box.wed { background-color: #d6ffd6; }
-.day-box.thu { background-color: #ffe6c2; }
-.day-box.fri { background-color: #d6ecff; }
-
-/* ----- หน้าประวัติรายบุคคล (ใบบุญ) ----- */
-#student-summary-box {
-	border: 1px solid #b8d4ff;
-	background-color: #f5f9ff;
-	border-radius: 6px;
-	margin: 15px auto;
-	max-width: 420px;
-	padding: 10px;
-	text-align: left;
-}
-
-#student-summary-box p { margin: 5px 0; }
-
-#student-history-table { border-collapse: collapse; width: 100%; margin: 10px auto; }
-#student-history-table th, #student-history-table td { border: 1px solid #999; padding: 8px; text-align: center; }
-#student-history-table th { background-color: #2f5d9e; color: white; }
-#student-history-table tbody tr:nth-child(even) { background-color: #f2f2f2; }
-
-/* ----- ตารางสถิติ (ใบบุญ) ----- */
-#stat-table {
-	border: 2px solid #2f5d9e;
-	border-radius: 6px;
-	margin: 10px auto;
-	padding: 10px;
-	width: 100%;
-	max-width: 420px;
-}
-
-#stat-table th, #stat-table td { padding: 8px; }
-#stat-table th { text-align: left; font-weight: normal; }
-#stat-table td { text-align: right; font-weight: bold; color: #2f5d9e; }
-
-/* ----- ปรับการแสดงผลสำหรับหน้าจอขนาดเล็ก (มือถือ) ----- */
 @media (max-width: 500px) {
-	.tabbtn { font-size: 14px; padding: 6px 10px; }
-	#content { margin: 10px; padding: 12px; }
+	#site-header h1 { font-size: 26px; }
+	#content { margin-top: 16px; }
+	.tray { padding: 10px; border-radius: 22px; }
+	#preview-box, #cameraVideo { height: 220px; }
+	#resMenu { font-size: 26px; }
+	.bar-row { grid-template-columns: 1fr 70px; }
+	.bar-name { grid-column: 1 / 3; }
+	.data-table { font-size: 14px; }
+}
+
+/* คนที่ตั้งเครื่องไว้ว่าไม่อยากเห็นอนิเมชัน ก็ปิดให้ */
+@media (prefers-reduced-motion: reduce) {
+	#result-box.show .well { animation: none; }
+	#toast { transition: none; }
 }
